@@ -1,0 +1,13 @@
+[{
+        "id": 100000,
+        "name": "gate.AuthRequest"
+    },
+    {
+        "id": 100001,
+        "name": "gate.AuthResponse"
+    },
+    {
+        "id": 100002,
+        "name": "gate.LogoutNotify"
+    }  
+]

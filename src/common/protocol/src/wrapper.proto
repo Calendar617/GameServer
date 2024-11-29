@@ -1,0 +1,19 @@
+syntax = "proto3";
+package wrapper;
+
+option go_package = "gen/wrapper";
+
+message RequestWrapper{
+    fixed32 seqId = 1;  //客户端递增序号
+    fixed32 msgId = 2;  //消息号，desc.json 里面的 id
+    bytes body = 3;     //protobuf编码后的字节数组 
+}
+
+
+message ResponseWrapper{
+    fixed32 seqId = 1;  //客户端递增序号响应，主动推送时为0
+    fixed32 msgId = 2;  //对应的消息id
+    fixed32 retCode = 3;//返回的错误码
+    bytes body = 4;     //protobuf编码后的字节数组
+    string retArgs = 5;//返回错误码参数 格式"1003|1004"(|分隔符)
+}

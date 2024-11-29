@@ -1,0 +1,101 @@
+syntax = "proto3";
+
+package login;
+
+option go_package = "/pbc";
+
+enum CMDDef{
+  invalid_id = 0;
+  common_udp_heartbeat = 1;
+  login_cs_get_battle_servers = 1001;
+  login_sc_get_battle_servers = 1002;
+
+  //进入世界
+  world_cs_enter_world = 2001;
+  world_sc_enter_world = 2002;
+
+  //世界转发
+  world_cs_forward_data = 2003;
+  world_sc_forward_data = 2004;
+  world_push_forward_data = 2005; //转发推送
+  world_push_disconnected = 2006; //转发掉线
+  
+  world_sc_other_enter_world = 2007;
+}
+
+//client-> server
+message cs_message_wrapper {
+  fixed32 cmd = 1;
+  fixed32 seq_id = 2;
+  bytes data = 3;
+}
+
+//server->client
+message sc_message_wrapper {
+  fixed32 cmd = 1;
+  fixed32 seq_id = 2;
+  int32 result = 3;
+  bytes data = 4;
+}
+
+message cs_get_battle_servers{
+
+}
+message sc_get_battle_servers{
+  repeated string serverList = 1;
+}
+
+message player_info {
+  uint64  uid = 1;
+  float  pos_x = 2;
+  float  pos_y = 3;
+  float  pos_z = 4;
+}
+
+message cs_enter_world {
+  uint64 uid = 1; //玩家uid
+  //float  pos_x = 2;
+  //float  pos_y = 3;
+  //float  pos_z = 4;
+}
+
+message sc_enter_world {
+  uint64 uid = 1; //玩家uid
+  float  pos_x = 2;
+  float  pos_y = 3;
+  float  pos_z = 4;
+  repeated player_info online_player_list = 5;
+}
+
+message sc_other_enter_world {
+  player_info other_player = 1;
+}
+
+message cs_forward_data {
+  bytes data = 1;
+  float  pos_x = 2;
+  float  pos_y = 3;
+  float  pos_z = 4;
+}
+
+message sc_forward_data {
+
+}
+
+message push_forward_data{
+  player_info forward_player = 1;
+  bytes data = 2; //所转发的消息数据
+}
+
+//玩家掉线推送
+message push_disconnected{
+  uint64 uid = 1; //玩家uid
+}
+
+message cs_req_udp_heartbeat{
+	uint32 seqid = 1;
+}
+
+message sc_rsp_udp_heartbeat{
+	uint32 seqid = 1;
+}

@@ -1,0 +1,9 @@
+syntax = "proto3";
+package errorCode;
+
+option go_package = "gen/errorCode";
+
+enum errorCode {
+    SUCCESS    = 0;//成功
+    ARGS_ERROR = 1000;//参数错误    
+}
