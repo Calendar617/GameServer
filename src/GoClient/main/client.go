@@ -2,10 +2,11 @@ package main
 
 import (
 	"bufio"
+	"bytes"
+	"encoding/binary"
 	"fmt"
 	"goclient/protocol/pbc"
 	"log"
-	"math/rand/v2"
 	"net"
 	"os"
 	"strings"
@@ -55,7 +56,7 @@ func (c *Client) HandleConn() {
 		}
 
 		msg := &pbc.ScMessageWrapper{}
-		temp := buffer[0:n]
+		temp := buffer[4:n]
 		err1 := proto.Unmarshal(temp, msg)
 		if err1 != nil {
 			fmt.Println("proto.Unmarshal CsMessageWrapper error =", err1)
@@ -92,12 +93,12 @@ func (c *Client) Move() {
 		select {
 		case <-timer.C:
 			if c.LoginStatus {
-				var deltaX = rand.Float32()
-				var deltaY = rand.Float32()
-				var deltaZ = rand.Float32()
-				c.Position[0] += deltaX
-				c.Position[1] += deltaY
-				c.Position[2] += deltaZ
+				//var deltaX = rand.Float32()
+				//var deltaY = rand.Float32()
+				//var deltaZ = rand.Float32()
+				//c.Position[0] += deltaX
+				//c.Position[1] += deltaY
+				c.Position[2] += 0.1 //deltaZ
 
 				c.PlayerMove(c.Position[0], c.Position[1], c.Position[2])
 			}
@@ -116,7 +117,12 @@ func (c *Client) send2Server(msgid uint32, data []byte) {
 		log.Fatal(err)
 	}
 	c.SeqId++
-	c.Conn.Write(data)
+
+	msglen := int32(len(data))
+	bytesBuffer := bytes.NewBuffer([]byte{})
+	binary.Write(bytesBuffer, binary.BigEndian, msglen)
+	newbuff := append(bytesBuffer.Bytes()[:], data[:]...)
+	c.Conn.Write(newbuff)
 }
 
 func (c *Client) EnterWorld(id uint64) {

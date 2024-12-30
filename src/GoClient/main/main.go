@@ -48,7 +48,7 @@ func main() {
 }
 
 func connect(index uint64) {
-	ipaddr := "127.0.0.1:8880"
+	ipaddr := "192.168.50.179:8880"
 	tcpAddr, err := net.ResolveTCPAddr("tcp4", ipaddr)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "client resolve addr faild Fatal error: %s", err.Error())
